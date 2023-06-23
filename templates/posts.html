@@ -1,0 +1,52 @@
+{% extends "components/base.html" %}
+
+{% block title %}All posts{% endblock title %}
+{% block main %}
+    <div class="container container-fluid">
+    <div class="m-5">
+       <a href="{% url 'django_app:post_create' %}" class="w-100 btn btn-primary btn-lg p-3 shadow-lg" type="submit">Подать объявление</a>
+    </div>
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-md-4">
+            <div class="bg-light m-3 p-2 rounded-3">
+                <img src='{{ post.image.url }}'  class="bd-placeholder-img card-img-top rounded-3" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ post.title }}</text></img>
+                <div class="card-header text-dark"> <b>{{ post.title }}</b></div>
+                    <div class="card-body text-dark">
+                      <p class="card-text"> {{ post.description }}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group pb-2">
+                          <a href="#" class="btn btn-sm btn-outline-secondary m-1">Подробнее</a>
+                          <a href="#" type="button" class="btn btn-sm btn-outline-secondary m-1">Редактировать</a>
+                        </div>
+                        <small class="text-muted">
+                            <a href="#" class="text-decoration-none btn">
+                            <i class="fa-solid fa-trash text-danger"></i>
+                            </a>
+                        </small>
+
+                    </div>
+                      <div class="btn btn-outline-dark text-dark">Автор: {{ post.author }}</div>
+                    </div>
+                  </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock main %}
+
+
+{#{% for post in posts %}#}
+{#    <div class="row justify-content-around">#}
+{#        <div class="col-lg-4 border border-1 bg-light rounded-5 m-3 p-3">#}
+{#            <img src='{{ post.image.url }}' class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></img>#}
+{#            <h2 class="fw-normal text-dark">{{ post.title }}</h2>#}
+{#            <p class="text-dark">{{ post.description }}</p>#}
+{#            <p><a class="btn btn-secondary" href="#">Подробнее</a></p>#}
+{#            <small class="text-dark" >{{ post.price }}</small>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{##}
+{#{% endfor %}#}

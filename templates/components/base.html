@@ -19,7 +19,11 @@
                 <h1>Это заголовок</h1>
                 <p class="lead">Это основная страница дипломной работы. Тут будет инфа о проекте</p>
                 <p class="lead">
-                  <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Попробовать</a>
+                   {% if user.is_authenticated %}
+                  <a href="{% url 'django_app:get_posts' %}" class="btn btn-lg btn-light fw-bold border-white bg-white">Попробовать</a>
+                    {% else %}
+                    <a href="{% url 'django_app:register' %}" class="btn btn-lg btn-light fw-bold border-white bg-white">Попробовать</a>
+                    {% endif %}
                 </p>
             </main>
             {% endblock main %}
