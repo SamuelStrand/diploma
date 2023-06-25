@@ -80,6 +80,7 @@ class Post(models.Model):
         verbose_name='Избранное',
         help_text='<small class="text-muted">BooleanField</small><hr><br>',
     )
+
     class Meta:
         app_label = 'django_app'
         ordering = ('-updated', 'title')
@@ -89,3 +90,44 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.title}({self.id}) | {self.description[0:30]}... | {self.updated}"
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(
+        upload_to='profiles/%Y/%m/%d/',
+        blank=True)
+    first_name = models.CharField(
+        validators=[MinLengthValidator(0), MaxLengthValidator(300), ],
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default='',
+        verbose_name='Имя',
+        help_text='<small class="text-muted">CharField [0, 300]</small><hr><br>',
+        max_length=300,
+    )
+    last_name = models.CharField(
+        validators=[MinLengthValidator(0), MaxLengthValidator(300), ],
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default='',
+        verbose_name='Фамилия',
+        help_text='<small class="text-muted">CharField [0, 300]</small><hr><br>',
+        max_length=300,
+    )
+    email = models.EmailField(default='')
+    phone_number = models.CharField(max_length=20, default='')
+
+    class Meta:
+        app_label = 'django_app'
+        ordering = ('id', 'user')
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+        db_table = 'django_app_profile_model_table'
+
+    def __str__(self):
+        return f"{self.user}({self.id})"

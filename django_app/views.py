@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from django_app import models, utils as django_utils
-from django_app.forms import ImageForm
+from django_app.forms import ImageForm, ProfileImageForm
 
 DatabaseCache = caches["default"]
 LocMemCache = caches["ram_cache"]
@@ -39,6 +39,8 @@ def register(request: HttpRequest) -> HttpResponse:
         first_name = request.POST.get('first_name', "")
         last_name = request.POST.get('last_name', "")
         username = request.POST.get('username', None)
+        email = request.POST.get('email', None)
+        phone_number = request.POST.get('phone_number', None)
         password1 = request.POST.get('password1', "")
         password2 = request.POST.get('password2', "")
 
@@ -51,6 +53,24 @@ def register(request: HttpRequest) -> HttpResponse:
                 username=username,
                 password=make_password(password1),
             )
+
+            form = ProfileImageForm(request.POST, request.FILES)
+            form.save()
+            image = form.instance
+
+            models.Profile.objects.create(
+                user=request.user,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number,
+                profile_image=image
+            )
+            print(username)
+            print(request.user)
+            print(email)
+            print(phone_number)
+
             return redirect(reverse('django_app:login', args=()))  # name=
         else:
             raise Exception("данные не заполнены!")
