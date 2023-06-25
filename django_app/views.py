@@ -187,3 +187,4 @@ def get_liked(request: HttpRequest) -> HttpResponse:
     )
     context = {'posts': post_list}
     return render(request, 'post_like.html', context=context)
+

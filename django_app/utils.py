@@ -1,6 +1,8 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
+
+from django_app.models import Post
 
 
 def caching(cache, name, timeout=10, query=lambda: None):
@@ -34,3 +36,6 @@ def paginate(request, objects, num_page):
         local_page = paginator.page(paginator.num_pages)
 
     return local_page
+
+
+
