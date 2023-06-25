@@ -1,23 +1,32 @@
+import time
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, update_last_login
+from django.core.cache import caches
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from django_app import models
+from django_app import models, utils as django_utils
 from django_app.forms import ImageForm
 
+DatabaseCache = caches["default"]
+LocMemCache = caches["ram_cache"]
 
-# Create your views here.
+
 def home(request: HttpRequest) -> HttpResponse:
-    context = {}
-    return render(request, 'home.html', context=context)
+    return render(request, 'home.html')
 
 
+@django_utils.login_required_decorator
 def get_posts(request: HttpRequest) -> HttpResponse:
-    posts = models.Post.objects.all()
-    context = {'posts': posts}
+    post_list = django_utils.caching(
+        LocMemCache, f"get_posts django_models.PostModel.objects.all()", 1,
+        lambda: models.Post.objects.all()
+    )
+    page = django_utils.paginate(request=request, objects=post_list, num_page=6)
+    context = {'page': page}
     return render(request, 'posts.html', context=context)
 
 
@@ -69,11 +78,13 @@ def my_login(request: HttpRequest) -> HttpResponse:
             raise Exception('no data')
 
 
+@django_utils.login_required_decorator
 def my_logout(request: HttpRequest) -> HttpResponse:
     logout(request)
     return redirect(reverse('django_app:login', args=()))
 
 
+@django_utils.login_required_decorator
 def post_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
         context = {}
@@ -82,13 +93,20 @@ def post_create(request: HttpRequest) -> HttpResponse:
         form = ImageForm(request.POST, request.FILES)
         form.save()
         image = form.instance
+        author = request.user
         title = request.POST.get('title', None)
         description = request.POST.get('description', "")
         price = request.POST.get('price', "")
-
+        print(f"""                
+        ******************************
+        *************************************
+        автооооор: {request.user}
+        ******************************
+        *************************************
+        """)
         try:
             models.Post.objects.create(
-                author=request.user,
+                author=author,
                 title=title,
                 description=description,
                 price=price,
@@ -96,3 +114,76 @@ def post_create(request: HttpRequest) -> HttpResponse:
             )
         except:
             return redirect(reverse('django_app:get_posts', args=()))
+
+
+@django_utils.login_required_decorator
+def post_update(request: HttpRequest, post_id: int) -> HttpResponse:
+    if request.method == 'GET':
+        post = models.Post.objects.get(id=post_id)
+        context = {'post': post}
+        return render(request, 'post_update.html', context=context)
+
+    elif request.method == 'POST':
+        post = models.Post.objects.get(id=post_id)
+        f_id = post.id
+        print(f_id)
+        form = ImageForm(request.POST, request.FILES)
+        form.save()
+        image = form.instance
+
+        title = request.POST.get("title", "")
+        description = request.POST.get('description', "")
+        price = request.POST.get("price", "")
+
+        post.title = title
+        post.description = description
+        post.description = price
+        post.image = image
+        try:
+            post.save()
+        except:
+            return redirect(reverse('django_app:read_one', args=(post_id,)))
+
+
+@django_utils.login_required_decorator
+def read_one(request, post_id=None):
+    post = django_utils.caching(
+        LocMemCache, f"read_one django_models.Post.objects.get(id={post_id})", 1,
+        lambda: models.Post.objects.get(id=post_id)
+    )
+    context = {"post": post}
+
+    return render(request, "post_detail.html", context)
+
+
+@django_utils.login_required_decorator
+def post_delete(request: HttpRequest, post_id: int) -> HttpResponse:
+    post = models.Post.objects.get(id=post_id)
+    post.delete()
+    return redirect(reverse('django_app:get_posts', args=()))
+
+
+@django_utils.login_required_decorator
+def post_like(request: HttpRequest, post_id: int) -> HttpResponse:
+    post = models.Post.objects.get(id=post_id)
+    post.is_liked = True
+    post.save()
+    return redirect(reverse('django_app:get_posts', args=()))
+
+
+@django_utils.login_required_decorator
+def post_dislike(request: HttpRequest, post_id: int) -> HttpResponse:
+    post = models.Post.objects.get(id=post_id)
+    post.is_liked = False
+    post.save()
+    return redirect(reverse('django_app:get_posts', args=()))
+
+
+@django_utils.login_required_decorator
+def get_liked(request: HttpRequest) -> HttpResponse:
+    post_list = django_utils.caching(
+        LocMemCache, f"get_posts django_models.PostModel.objects.all()", 1,
+        lambda: models.Post.objects.all()
+    )
+    context = {'posts': post_list}
+    return render(request, 'post_like.html', context=context)

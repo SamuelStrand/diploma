@@ -1,0 +1,70 @@
+{% extends "components/base.html" %}
+
+{% block title %}Изменение{% endblock title %}
+{% block main %}
+
+    <div class="container container-fluid">
+        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-comment"></i>
+        <main class="form-signin">
+            <div class="py-5 text-center">
+              <h2>Отредактируйте объявление!</h2>
+              <p class="lead">Измените поля и нажмите подтвердить</p>
+            </div>
+
+            <div class="row g-5 justify-content-center">
+                <div class="col-md-7 col-lg-8">
+                    <form action="{% url 'django_app:post_update' post.id %}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                    >
+              {% csrf_token %}
+                         {{ form.as_p }}
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label for="firstName" class="form-label">Название</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="" required="" name="title"
+                    value="{{ post.title }}"
+                    >
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+    <br>
+                <div class="col-12">
+                    <label for="lastName" class="form-label">Описание</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="" value="{{ post.description }}" required="" name="description">
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+
+                <center>
+                    <div class="col-sm-6">
+                      <label for="username" class="form-label">Цена</label>
+                      <div class="input-group has-validation">
+                          <input type="number" class="form-control" id="username" placeholder="Укажите цену" value="{{ post.price }}" required="" name="price">
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <div class="col-12">
+                    <label for="address" class="form-label">Фото</label>
+                    <input type="file" class="form-control-file" id="address" accept="image/*" placeholder="Загрузите свой файл"  name="image">
+                    </div>
+                </center>
+
+
+            </div>
+
+                        <hr class="my-4">
+
+                        <button class="w-100 btn btn-primary btn-lg" type="submit">Изменить</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+{% endblock main %}

@@ -44,7 +44,7 @@ class Post(models.Model):
 
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
+        decimal_places=0,
         verbose_name='Цена',
     )
 
@@ -72,7 +72,14 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='ads/%Y/%m/%d/',
         blank=True)
-
+    is_liked = models.BooleanField(
+        editable=True,
+        blank=True,
+        null=True,
+        default=False,
+        verbose_name='Избранное',
+        help_text='<small class="text-muted">BooleanField</small><hr><br>',
+    )
     class Meta:
         app_label = 'django_app'
         ordering = ('-updated', 'title')

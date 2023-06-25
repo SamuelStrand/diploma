@@ -81,6 +81,21 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache_table',
+        'TIMEOUT': '120',
+        'OPTIONS': {
+            'MAX_ENTRIES': 200,
+        }
+    },
+    'ram_cache': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'django_ram_cache_table',
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -117,11 +132,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    Path(BASE_DIR / 'static'),
-    Path(BASE_DIR / 'static_external'),
-]
+STATIC_URL = 'static/'
+if DEBUG:
+    STATICFILES_DIRS = [
+        Path(BASE_DIR / 'static'),
+        Path(BASE_DIR / 'static_external'),
+        Path(BASE_DIR / 'frontend/build/static'),
+        Path(BASE_DIR / 'frontend/public/static'),
+    ]
+else:
+    STATIC_ROOT = Path(BASE_DIR / 'static')
+    STATICFILES_DIRS = [
+        Path(BASE_DIR / 'static_external'),
+        Path(BASE_DIR / 'frontend/build/static'),
+        Path(BASE_DIR / 'frontend/public/static'),
+    ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -8,8 +8,17 @@ app_name = "django_app"
 
 urlpatterns = [
     path("", views.home, name="home"),
+
     path('post/', views.get_posts, name='get_posts'),
     path('post/create/', views.post_create, name='post_create'),
+    path("post/<int:post_id>/detail/", views.read_one, name="read_one"),
+    path('post/<int:post_id>/update/', views.post_update, name='post_update'),
+    path('post/<int:post_id>/delete/', views.post_delete, name='post_delete'),
+
+    path('post/<int:post_id>/liked_posts/', views.post_like, name='post_like'),
+    path('post/<int:post_id>/disliked_posts/', views.post_dislike, name='post_dislike'),
+
+    path('post/liked', views.get_liked, name='get_liked'),
 
     path('register/', views.register, name='register'),
     path('login/', views.my_login, name='login'),

@@ -1,0 +1,24 @@
+{% extends 'components/base.html' %}
+
+{% block main %}
+<center>
+<div class="bg-light mx-5 p-3 rounded-3 w-50">
+    <a href="{% url 'django_app:get_posts' %}" class="btn btn-sm btn-outline-danger btn-danger text-light m-1 px-5">Назад</a>
+    <img src='{{ post.image.url }}'  class="bd-placeholder-img card-img-top rounded-3"  width="400"
+     height="500"/>
+    <br>
+    <br>
+    <div class="card-header text-dark"> <b>{{ post.title }}</b></div>
+        <div class="card-body text-dark">
+            <p class="card-text">Цена: {{ post.price }} тенге</p>
+          <p class="card-text"> {{ post.description }}</p>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="btn-group pb-2">
+              <a href="{% url 'django_app:post_update' post.id %}" type="button" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+            </div>
+          </div>
+          <div class="btn btn-outline-dark text-dark">Автор: {{ post.author }}</div>
+        </div>
+</div>
+</center>
+{% endblock %}

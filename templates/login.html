@@ -10,6 +10,8 @@
                           enctype="multipart/form-data"
                     >
               {% csrf_token %}
+                        {{ form.as_p }}
+
             <div class="row g-3">
 
 
