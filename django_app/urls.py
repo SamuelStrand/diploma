@@ -23,6 +23,14 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.my_login, name='login'),
     path('logout/', views.my_logout, name='logout'),
+
+    path('profile/', views.profile, name='profile'),
+
+    path('post/<int:post_id>/comment/create/', views.post_comment_create, name='post_comment_create'),
+    path('post/<int:post_id>/comment/delete/', views.post_comment_delete, name='post_comment_delete'),
+
+    path('profile/<int:profile_id>/comment/create/', views.profile_comment_create, name='profile_comment_create'),
+
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -94,9 +94,7 @@ class Post(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_image = models.ImageField(
-        upload_to='profiles/%Y/%m/%d/',
-        blank=True)
+
     first_name = models.CharField(
         validators=[MinLengthValidator(0), MaxLengthValidator(300), ],
         unique=False,
@@ -131,3 +129,117 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user}({self.id})"
+
+
+class PostComment(models.Model):
+    user = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Пользователь',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=User,
+        on_delete=models.SET_NULL,
+    )
+    article = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Статья',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=Post,
+        on_delete=models.SET_NULL,
+    )
+    text = models.CharField(
+        verbose_name="Текст комментария",
+        default="",
+        editable=True,
+        blank=True,
+        unique=False,
+        db_index=False,
+
+        max_length=300
+    )
+    created = models.DateTimeField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name='Дата и время создания',
+        help_text='<small class="text-muted">DateTimeField</small><hr><br>',
+
+        auto_now=False,
+        auto_now_add=False,
+    )
+
+    class Meta:
+        app_label = 'django_app'
+        ordering = ('-created',)
+        verbose_name = 'Комментарий к публикации'
+        verbose_name_plural = 'Комментарии к публикациям'
+        db_table = 'django_app_postcomment_model_table'
+
+
+    def __str__(self):
+        return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"
+
+
+class ProfileComment(models.Model):
+    user = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Пользователь',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=User,
+        on_delete=models.SET_NULL,
+    )
+    profile = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Профиль',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=Profile,
+        on_delete=models.SET_NULL,
+    )
+    text = models.CharField(
+        verbose_name="Текст комментария",
+        default="",
+        editable=True,
+        blank=True,
+        unique=False,
+        db_index=False,
+
+        max_length=300
+    )
+    created = models.DateTimeField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name='Дата и время создания',
+        help_text='<small class="text-muted">DateTimeField</small><hr><br>',
+
+        auto_now=False,
+        auto_now_add=False,
+    )
+
+    class Meta:
+        app_label = 'django_app'
+        ordering = ('-created',)
+        verbose_name = 'Отзыв к профилю'
+        verbose_name_plural = 'Отзывы к профилю'
+        db_table = 'django_app_profilecomment_model_table'
+
+
+    def __str__(self):
+        return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"

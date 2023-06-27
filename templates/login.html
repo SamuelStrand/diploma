@@ -1,41 +1,44 @@
 {% extends "components/base.html" %}
 
-{% block title %}Login{% endblock title%}
+{% block title %}Login{% endblock title %}
 {% block main %}
     <center>
- <div class="row g-5 justify-content-center" style="width: 1200px">
-                <div class="col-md-7 col-lg-8">
-                    <form action="{% url 'django_app:login' %}"
-                          method="POST"
-                          enctype="multipart/form-data"
-                    >
-              {% csrf_token %}
-                        {{ form.as_p }}
+        <div class="row g-5 justify-content-center" style="width: 1200px">
+            <div class="col-md-7 col-lg-8">
+                <form action="{% url 'django_app:login' %}"
+                      method="POST"
+                      enctype="multipart/form-data"
+                >
+                    {% csrf_token %}
+                    {{ form.as_p }}
 
-            <div class="row g-3">
+                    <div class="row g-3">
 
 
-                <div class="col-12">
-                  <label for="username" class="form-label">Имя пользователя</label>
-                  <div class="input-group has-validation">
-                      <span class="input-group-text">#</span>
-                      <input type="text" class="form-control" id="username" placeholder="Имя пользователя" required="" name="username">
-                  </div>
-                </div>
+                        <div class="col-12">
+                            <label for="username" class="form-label">Имя пользователя</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text">#</span>
+                                <input type="text" class="form-control" id="username" placeholder="Имя пользователя"
+                                       required="" name="username">
+                            </div>
+                        </div>
 
-                <div class="col-12">
-                    <label for="password" class="form-label">Пароль</label>
-                    <input style="" type="password" class="form-control" id="password" placeholder="12345Qwerty!..." required="" name="password">
-                </div>
+                        <div class="col-12">
+                            <label for="password" class="form-label">Пароль</label>
+                            <input style="" type="password" class="form-control" id="password"
+                                   placeholder="12345Qwerty!..." required="" name="password">
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Войти</button>
+                </form>
+                <br>
+                <p>Нет аккаунта? <a class="text-primary text-decoration-none" href="{% url 'django_app:register' %}">Зарегистрируйтесь</a>
+                    прямо сейчас!</p>
             </div>
-
-                        <hr class="my-4">
-
-                        <button class="w-100 btn btn-primary btn-lg" type="submit">Войти</button>
-                    </form>
-                    <br>
-                    <p>Нет аккаунта? <a class="text-primary text-decoration-none" href="{% url 'django_app:register' %}">Зарегистрируйтесь</a> прямо сейчас!</p>
-                </div>
-            </div>
+        </div>
     </center>
 {% endblock %}

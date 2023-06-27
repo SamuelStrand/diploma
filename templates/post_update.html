@@ -8,8 +8,8 @@
         <i class="fa-solid fa-comment"></i>
         <main class="form-signin">
             <div class="py-5 text-center">
-              <h2>Отредактируйте объявление!</h2>
-              <p class="lead">Измените поля и нажмите подтвердить</p>
+                <h2>Отредактируйте объявление!</h2>
+                <p class="lead">Измените поля и нажмите подтвердить</p>
             </div>
 
             <div class="row g-5 justify-content-center">
@@ -18,44 +18,45 @@
                           method="POST"
                           enctype="multipart/form-data"
                     >
-              {% csrf_token %}
-                         {{ form.as_p }}
-            <div class="row g-3">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="row g-3">
 
-                <div class="col-12">
-                    <label for="firstName" class="form-label">Название</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" required="" name="title"
-                    value="{{ post.title }}"
-                    >
-                    <div class="invalid-feedback">
-                    </div>
-                </div>
-    <br>
-                <div class="col-12">
-                    <label for="lastName" class="form-label">Описание</label>
-                    <input type="text" class="form-control" id="lastName" placeholder="" value="{{ post.description }}" required="" name="description">
-                    <div class="invalid-feedback">
-                    </div>
-                </div>
+                            <div class="col-12">
+                                <label for="title" class="form-label">Название</label>
+                                <input type="text" class="form-control" id="title" placeholder="" required=""
+                                       name="title"
+                                       value="{{ post.title }}"
+                                >
+                            </div>
+                            <br>
+                            <div class="col-12">
+                                <label for="description" class="form-label">Описание</label>
+                                <input type="text" class="form-control" id="description" placeholder=""
+                                       value="{{ post.description }}" required="" name="description">
+                            </div>
 
-                <center>
-                    <div class="col-sm-6">
-                      <label for="username" class="form-label">Цена</label>
-                      <div class="input-group has-validation">
-                          <input type="number" class="form-control" id="username" placeholder="Укажите цену" value="{{ post.price }}" required="" name="price">
-                      </div>
-                    </div>
+                            <center>
+                                <div class="col-sm-6">
+                                    <label for="price" class="form-label">Цена</label>
+                                    <div class="input-group has-validation">
+                                        <input type="number" class="form-control" id="price"
+                                               placeholder="Укажите цену" value="{{ post.price }}" required=""
+                                               name="price">
+                                    </div>
+                                </div>
 
-                    <br>
+                                <br>
 
-                    <div class="col-12">
-                    <label for="address" class="form-label">Фото</label>
-                    <input type="file" class="form-control-file" id="address" accept="image/*" placeholder="Загрузите свой файл"  name="image">
-                    </div>
-                </center>
+                                <div class="col-12">
+                                    <label for="image" class="form-label">Фото</label>
+                                    <input type="file" class="form-control-file" id="image" accept="image/*"
+                                           placeholder="Загрузите свой файл" name="image">
+                                </div>
+                            </center>
 
 
-            </div>
+                        </div>
 
                         <hr class="my-4">
 
