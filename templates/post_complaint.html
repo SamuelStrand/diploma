@@ -1,8 +1,8 @@
 {% extends 'components/base.html' %}
 {% block main %}
-    <h1 class="text-primary">Комментарии</h1>
-    <div class="w-100">
-        <form action="{% url 'django_app:complaint' post.id %}"
+    <h1 class="text-primary">Жалоба</h1>
+    <div class="">
+        <form style="margin-bottom: 350px" action="{% url 'django_app:complaint' post.id %}"
               method="POST"
               enctype="multipart/form-data">
             {% csrf_token %}

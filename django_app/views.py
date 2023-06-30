@@ -245,20 +245,6 @@ def post_comment_delete(request: HttpRequest, post_id: int) -> HttpResponse:
 
 
 @django_utils.login_required_decorator
-def profile_comment_create(request: HttpRequest, profile_id: int) -> HttpResponse:
-    if request.method == 'POST':
-        text = request.POST.get('text', None)
-        my_profile = models.Profile.objects.get(id=profile_id)
-        models.ProfileComment.objects.create(
-            user=request.user,
-            profile=my_profile,
-            text=text
-        )
-
-        return redirect(reverse('django_app:profile', args=()))
-
-
-@django_utils.login_required_decorator
 def complaint(request: HttpRequest, post_id: int) -> HttpResponse:
     post = django_utils.caching(
         LocMemCache, f"complaint django_models.Post.objects.get(id={post_id})", 1,
@@ -279,3 +265,52 @@ def complaint(request: HttpRequest, post_id: int) -> HttpResponse:
             reason=reason
         )
         return redirect(reverse('django_app:get_posts', args=()), context=context)
+
+
+@django_utils.login_required_decorator
+def get_profiles(request: HttpRequest) -> HttpResponse:
+    profile_list = django_utils.caching(
+        LocMemCache, f"get_posts django_models.Profile.objects.all()", 1,
+        lambda: models.Profile.objects.all()
+    )
+    page = django_utils.paginate(request=request, objects=profile_list, num_page=3)
+    context = {'page': page}
+    return render(request, 'all_profiles.html', context=context)
+
+
+@django_utils.login_required_decorator
+def detail_profile(request, profile_id=None):
+    user_profile = django_utils.caching(
+        LocMemCache, f"detail_profile django_models.Profile.objects.get(id={profile_id})", 1,
+        lambda: models.Profile.objects.get(id=profile_id)
+    )
+    profile_comments = django_utils.caching(
+        LocMemCache, f"detail_profile django_models.ProfileComment.objects.filter(article=post)", 1,
+        lambda: models.ProfileComment.objects.filter(profile=user_profile)
+    )
+    page = django_utils.paginate(request=request, objects=profile_comments, num_page=2)
+
+    posts = django_utils.caching(
+        LocMemCache, f"profile django_models.Post.objects.all()", 1,
+        lambda: models.Post.objects.all()
+    )
+
+    posts = posts[:2]
+
+    context = {"user_profile": user_profile, "profile_comments": page, 'posts': posts}
+
+    return render(request, "detail_profile.html", context)
+
+
+@django_utils.login_required_decorator
+def profile_comment_create(request: HttpRequest, profile_id: int) -> HttpResponse:
+    if request.method == 'POST':
+        text = request.POST.get('text', None)
+        my_profile = models.Profile.objects.get(id=profile_id)
+        models.ProfileComment.objects.create(
+            user=request.user,
+            profile=my_profile,
+            text=text
+        )
+
+        return redirect(reverse('django_app:detail_profile', args=(profile_id,)))

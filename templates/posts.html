@@ -27,10 +27,10 @@
                                 <div class="btn-group pb-2">
                                     <a href="{% url 'django_app:read_one' post.id %}"
                                        class="btn btn-sm btn-outline-secondary m-1">Подробнее</a>
-                                    {% if post.author == post.user %}
+{#                                    {% if post.author == request.user  %}#}
                                         <a href="{% url 'django_app:post_update' post.id %}" type="button"
                                            class="btn btn-sm btn-outline-secondary m-1">Редактировать</a>
-                                    {% endif %}
+{#                                    {% endif %}#}
                                 </div>
                                 <small class="text-muted text-dark">
                                     <a href="{% url 'django_app:complaint' post.id %}"
@@ -50,10 +50,12 @@
                                             <i class="fa-solid fa-heart fa-beat btn-outline-danger text-danger"></i>
                                         </a>
                                     {% endif %}
+{#                                 {% if post.author == request.user %}#}
                                     <a href="{% url 'django_app:post_delete' post.id %}"
                                        class="text-decoration-none btn">
                                         <i class="fa-solid fa-trash fa-bounce text-danger"></i>
                                     </a>
+{#                                {% endif %}#}
                                 </small>
                             </div>
                             <a href="{% url 'django_app:profile' %}"

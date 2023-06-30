@@ -3,7 +3,6 @@ from django_app import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 app_name = "django_app"
 
 urlpatterns = [
@@ -26,7 +25,9 @@ urlpatterns = [
     path('login/', views.my_login, name='login'),
     path('logout/', views.my_logout, name='logout'),
 
-    path('profile/', views.profile, name='profile'),
+    path('my_profile/', views.profile, name='profile'),
+    path('profiles/', views.get_profiles, name='get_profiles'),
+    path("profiles/<int:profile_id>/detail/", views.detail_profile, name="detail_profile"),
 
     path('post/<int:post_id>/comment/create/', views.post_comment_create, name='post_comment_create'),
     path('post/<int:post_id>/comment/delete/', views.post_comment_delete, name='post_comment_delete'),
