@@ -223,6 +223,20 @@ def profile(request: HttpRequest) -> HttpResponse:
 
 
 @django_utils.login_required_decorator
+def profile_comment_create(request: HttpRequest, profile_id: int) -> HttpResponse:
+    if request.method == 'POST':
+        text = request.POST.get('text', None)
+        my_profile = models.Profile.objects.get(id=profile_id)
+        models.ProfileComment.objects.create(
+            user=request.user,
+            profile=my_profile,
+            text=text
+        )
+
+        return redirect(reverse('django_app:detail_profile', args=(profile_id,)))
+
+
+@django_utils.login_required_decorator
 def post_comment_create(request: HttpRequest, post_id: int) -> HttpResponse:
     if request.method == 'POST':
         text = request.POST.get('text', None)
@@ -300,17 +314,3 @@ def detail_profile(request, profile_id=None):
     context = {"user_profile": user_profile, "profile_comments": page, 'posts': posts}
 
     return render(request, "detail_profile.html", context)
-
-
-@django_utils.login_required_decorator
-def profile_comment_create(request: HttpRequest, profile_id: int) -> HttpResponse:
-    if request.method == 'POST':
-        text = request.POST.get('text', None)
-        my_profile = models.Profile.objects.get(id=profile_id)
-        models.ProfileComment.objects.create(
-            user=request.user,
-            profile=my_profile,
-            text=text
-        )
-
-        return redirect(reverse('django_app:detail_profile', args=(profile_id,)))
