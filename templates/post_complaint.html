@@ -1,0 +1,25 @@
+{% extends 'components/base.html' %}
+{% block main %}
+    <h1 class="text-primary">Комментарии</h1>
+    <div class="w-100">
+        <form action="{% url 'django_app:complaint' post.id %}"
+              method="POST"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                        <div class="card-body p-4">
+                            <div class="form-outline mb-4">
+                                <input type="text" id="reason" class="form-control" maxlength="300"
+                                       minlength="1" required placeholder="Опишите причину жалобы"
+                                       name="reason">
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-sm">Отправить жалобу</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+{% endblock main %}

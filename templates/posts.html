@@ -33,6 +33,11 @@
                                     {% endif %}
                                 </div>
                                 <small class="text-muted text-dark">
+                                    <a href="{% url 'django_app:complaint' post.id %}"
+                                       class="text-decoration-none btn">
+                                        <i class="fa-solid fa-flag text-danger"></i>
+
+                                    </a>
                                     {% if not post.is_liked %}
                                         <a href="{% url 'django_app:post_like' post.id %}"
                                            class="text-decoration-none btn">
@@ -51,7 +56,8 @@
                                     </a>
                                 </small>
                             </div>
-                            <a href="{% url 'django_app:profile' %}" class="btn btn-outline-dark text-dark">Автор: {{ post.author }}</a>
+                            <a href="{% url 'django_app:profile' %}"
+                               class="btn btn-outline-dark text-dark">Автор: {{ post.author }}</a>
                         </div>
                     </div>
                 </div>

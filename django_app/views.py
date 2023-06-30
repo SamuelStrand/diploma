@@ -1,5 +1,3 @@
-import time
-
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, update_last_login
@@ -17,17 +15,6 @@ LocMemCache = caches["ram_cache"]
 
 def home(request: HttpRequest) -> HttpResponse:
     return render(request, 'home.html')
-
-
-@django_utils.login_required_decorator
-def get_posts(request: HttpRequest) -> HttpResponse:
-    post_list = django_utils.caching(
-        LocMemCache, f"get_posts django_models.Post.objects.all()", 1,
-        lambda: models.Post.objects.all()
-    )
-    page = django_utils.paginate(request=request, objects=post_list, num_page=6)
-    context = {'page': page}
-    return render(request, 'posts.html', context=context)
 
 
 def register(request: HttpRequest) -> HttpResponse:
@@ -98,6 +85,17 @@ def my_logout(request: HttpRequest) -> HttpResponse:
 
 
 @django_utils.login_required_decorator
+def get_posts(request: HttpRequest) -> HttpResponse:
+    post_list = django_utils.caching(
+        LocMemCache, f"get_posts django_models.Post.objects.all()", 1,
+        lambda: models.Post.objects.all()
+    )
+    page = django_utils.paginate(request=request, objects=post_list, num_page=6)
+    context = {'page': page}
+    return render(request, 'posts.html', context=context)
+
+
+@django_utils.login_required_decorator
 def post_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
         context = {}
@@ -138,13 +136,13 @@ def post_update(request: HttpRequest, post_id: int) -> HttpResponse:
 
     elif request.method == 'POST':
         post = models.Post.objects.get(id=post_id)
-        f_id = post.id
+
         form = ImageForm(request.POST, request.FILES)
         form.save()
         image = form.instance
 
         title = request.POST.get("title", "")
-        description = request.POST.get('description', "")
+        description = request.POST.get("description", "")
         price = request.POST.get("price", "")
 
         post.title = title
@@ -258,3 +256,26 @@ def profile_comment_create(request: HttpRequest, profile_id: int) -> HttpRespons
         )
 
         return redirect(reverse('django_app:profile', args=()))
+
+
+@django_utils.login_required_decorator
+def complaint(request: HttpRequest, post_id: int) -> HttpResponse:
+    post = django_utils.caching(
+        LocMemCache, f"complaint django_models.Post.objects.get(id={post_id})", 1,
+        lambda: models.Post.objects.get(id=post_id)
+    )
+
+    context = {'post': post}
+
+    if request.method == 'GET':
+        return render(request, 'post_complaint.html', context=context)
+
+    if request.method == 'POST':
+        reason = request.POST.get('reason', None)
+        post = models.Post.objects.get(id=post_id)
+        models.Complaint.objects.create(
+            user=request.user,
+            post=post,
+            reason=reason
+        )
+        return redirect(reverse('django_app:get_posts', args=()), context=context)

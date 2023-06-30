@@ -183,7 +183,6 @@ class PostComment(models.Model):
         verbose_name_plural = 'Комментарии к публикациям'
         db_table = 'django_app_postcomment_model_table'
 
-
     def __str__(self):
         return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"
 
@@ -240,6 +239,60 @@ class ProfileComment(models.Model):
         verbose_name_plural = 'Отзывы к профилю'
         db_table = 'django_app_profilecomment_model_table'
 
-
     def __str__(self):
         return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"
+
+
+class Complaint(models.Model):
+    post = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Пост',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=Post,
+        on_delete=models.SET_NULL,
+    )
+    user = models.ForeignKey(
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Пользователь',
+        help_text='<small class="text-muted">ForeignKey</small><hr><br>',
+        to=User,
+        on_delete=models.SET_NULL,
+    )
+    reason = models.CharField(
+        verbose_name="Причина жалобы",
+        default="",
+        editable=True,
+        blank=True,
+        unique=False,
+        db_index=False,
+        max_length=300
+    )
+    created = models.DateTimeField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name='Дата и время создания',
+        help_text='<small class="text-muted">DateTimeField</small><hr><br>',
+
+        auto_now=False,
+        auto_now_add=False,
+    )
+
+    class Meta:
+        app_label = 'django_app'
+        ordering = ('-created',)
+        verbose_name = 'Жалоба на объявление'
+        verbose_name_plural = 'Жалобы на объявление'
+        db_table = 'django_app_complaint_model_table'
+
+    def __str__(self):
+        return f"Жалоба #{self.pk} - {self.post.title} - Причина: {self.reason}"

@@ -18,6 +18,8 @@ urlpatterns = [
     path('post/<int:post_id>/liked_posts/', views.post_like, name='post_like'),
     path('post/<int:post_id>/disliked_posts/', views.post_dislike, name='post_dislike'),
 
+    path('post/<int:post_id>/complaint/create', views.complaint, name='complaint'),
+
     path('post/liked', views.get_liked, name='get_liked'),
 
     path('register/', views.register, name='register'),
