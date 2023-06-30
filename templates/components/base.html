@@ -21,8 +21,8 @@
     {% include 'components/navbar.html' %}
     {% block main %}
         <main class="px-3">
-            <h1>Это заголовок</h1>
-            <p class="lead">Это основная страница дипломной работы. Тут будет инфа о проекте</p>
+            <h1>Маркетплейс</h1>
+            <p class="lead">Это лендинг страница маркетплейса. Нажми на кнопку нижу и испытай сайт</p>
             <p class="lead">
                 {% if user.is_authenticated %}
                     <a href="{% url 'django_app:get_posts' %}"

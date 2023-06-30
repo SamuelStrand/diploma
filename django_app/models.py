@@ -70,7 +70,7 @@ class Post(models.Model):
         auto_now_add=False,
     )
     image = models.ImageField(
-        upload_to='ads/%Y/%m/%d/',
+        upload_to='media/ads/%Y/%m/%d/',
         blank=True)
     is_liked = models.BooleanField(
         editable=True,
