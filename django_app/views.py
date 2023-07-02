@@ -33,6 +33,7 @@ def register(request: HttpRequest) -> HttpResponse:
 
         if password1 and password1 != password2:
             raise Exception("пароли не совпадают!")
+
         if username and password1:
             User.objects.create(
                 first_name=first_name,
@@ -53,7 +54,7 @@ def register(request: HttpRequest) -> HttpResponse:
                 email=email,
                 phone_number=phone_number,
             )
-            return redirect(reverse('django_app:get_posts', args=()))  # name=
+            return redirect(reverse('django_app:get_posts', args=()))
         else:
             raise Exception("данные не заполнены!")
 
@@ -66,6 +67,7 @@ def my_login(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         username = request.POST.get('username', "")
         password = request.POST.get('password', "")
+
         if username and password:
             user_obj = authenticate(username=username, password=password)
             if user_obj:
@@ -161,10 +163,12 @@ def read_one(request, post_id=None):
         LocMemCache, f"read_one django_models.Post.objects.get(id={post_id})", 1,
         lambda: models.Post.objects.get(id=post_id)
     )
+
     post_comments = django_utils.caching(
         LocMemCache, f"read_one django_models.PostComment.objects.filter(article=post)", 1,
         lambda: models.PostComment.objects.filter(article=post)
     )
+
     page = django_utils.paginate(request=request, objects=post_comments, num_page=4)
 
     context = {"post": post, "page": page}
@@ -218,6 +222,7 @@ def profile(request: HttpRequest) -> HttpResponse:
         lambda: models.ProfileComment.objects.all()
     )
     page2 = django_utils.paginate(request=request, objects=profile_comments, num_page=2)
+
     context = {'page': page, 'page2': page2, 'profile_comments': profile_comments}
     return render(request, 'profile.html', context=context)
 
@@ -264,13 +269,12 @@ def complaint(request: HttpRequest, post_id: int) -> HttpResponse:
         LocMemCache, f"complaint django_models.Post.objects.get(id={post_id})", 1,
         lambda: models.Post.objects.get(id=post_id)
     )
-
     context = {'post': post}
 
     if request.method == 'GET':
         return render(request, 'post_complaint.html', context=context)
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         reason = request.POST.get('reason', None)
         post = models.Post.objects.get(id=post_id)
         models.Complaint.objects.create(
@@ -284,7 +288,7 @@ def complaint(request: HttpRequest, post_id: int) -> HttpResponse:
 @django_utils.login_required_decorator
 def get_profiles(request: HttpRequest) -> HttpResponse:
     profile_list = django_utils.caching(
-        LocMemCache, f"get_posts django_models.Profile.objects.all()", 1,
+        LocMemCache, f"get_profiles django_models.Profile.objects.all()", 1,
         lambda: models.Profile.objects.all()
     )
     page = django_utils.paginate(request=request, objects=profile_list, num_page=3)

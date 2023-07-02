@@ -184,7 +184,7 @@ class PostComment(models.Model):
         db_table = 'django_app_postcomment_model_table'
 
     def __str__(self):
-        return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"
+        return f"Комментарий #{self.pk} от {self.user} написал: {self.text[:30]} [{self.created}]"
 
 
 class ProfileComment(models.Model):
@@ -240,7 +240,7 @@ class ProfileComment(models.Model):
         db_table = 'django_app_profilecomment_model_table'
 
     def __str__(self):
-        return f"PostComment: {self.user} {self.text[:30]} [{self.created}]"
+        return f"Отзыв #{self.pk} от {self.user} написал: {self.text[:30]} [{self.created}]"
 
 
 class Complaint(models.Model):
@@ -295,4 +295,4 @@ class Complaint(models.Model):
         db_table = 'django_app_complaint_model_table'
 
     def __str__(self):
-        return f"Жалоба #{self.pk} - {self.post.title} - Причина: {self.reason}"
+        return f"Жалоба #{self.pk} - Причина: {self.reason}"
